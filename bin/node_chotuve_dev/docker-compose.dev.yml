@@ -1,0 +1,35 @@
+version: '3'
+services:
+    chotuve_media:
+        image: node:13
+        volumes:
+            - ../..:/home/node/app
+        environment:
+            MONGODB_URL: "mongodb://chotuve_media_db:27017/chotuve-media-dev"
+            PORT: 8080
+           
+            # Travis CI / Coveralls
+            CI: ${CI:-}
+            COVERALLS_REPO_TOKEN: ${COVERALLS_REPO_TOKEN:-}
+            TRAVIS: ${TRAVIS:-}
+            TRAVIS_BRANCH: ${TRAVIS_BRANCH:-}
+            TRAVIS_COMMIT: ${TRAVIS_COMMIT:-}
+            TRAVIS_JOB_ID: ${TRAVIS_JOB_ID:-}
+            TRAVIS_JOB_NUMBER: ${TRAVIS_JOB_NUMBER:-}
+            TRAVIS_OS_NAME: ${TRAVIS_OS_NAME:-}
+            TRAVIS_PULL_REQUEST: ${TRAVIS_PULL_REQUEST:-}
+            TRAVIS_PULL_REQUEST_SHA: ${TRAVIS_PULL_REQUEST_SHA:-}
+            TRAVIS_REPO_SLUG: ${TRAVIS_REPO_SLUG:-}
+            TRAVIS_TAG: ${TRAVIS_TAG:-}
+        working_dir: /home/node/app
+        command: /bin/bash /home/node/app/bin/node_chotuve_dev/start.sh
+        ports:
+            - 0.0.0.0:27080:8080
+        links:
+            - chotuve_media_db
+    chotuve_media_db:
+        image: mongo
+        volumes:
+            - chotuve_app_mongo_data:/data/db
+volumes:
+        chotuve_app_mongo_data:

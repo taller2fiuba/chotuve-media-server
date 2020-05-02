@@ -1,0 +1,3 @@
+#!/bin/bash
+
+exec $(dirname "$0")/dev-compose exec chotuve_media npm "$@"

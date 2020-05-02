@@ -1,0 +1,19 @@
+version: '3.1'
+services:
+    chotuve_media:
+        build: .
+        restart: always
+        links:
+            - chotuve_media_db
+        environment:
+            MONGODB_URL: "mongodb://chotuve_media_db:27017/chotuve-media-dev"
+            PORT: 8080
+        ports:
+           - ${CHOTUVE_MEDIA_PORT:-27080}:8080
+    chotuve_media_db:
+        image: mongo
+        restart: always
+        volumes:
+            - chotuve_media_mongo_data:/data/db
+volumes:
+        chotuve_media_mongo_data:
