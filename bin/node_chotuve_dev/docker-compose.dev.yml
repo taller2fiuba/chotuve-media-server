@@ -5,8 +5,8 @@ services:
         volumes:
             - ../..:/home/node/app
         environment:
-            MONGODB_URL: "mongodb://chotuve_media_db:27017/chotuve-media-dev"
-            PORT: 8080
+            MONGODB_URL: "mongodb://localhost:27017/chotuve-media-dev"
+            PORT: 27080
            
             # Travis CI / Coveralls
             CI: ${CI:-}
@@ -23,13 +23,13 @@ services:
             TRAVIS_TAG: ${TRAVIS_TAG:-}
         working_dir: /home/node/app
         command: /bin/bash /home/node/app/bin/node_chotuve_dev/start.sh
-        ports:
-            - 0.0.0.0:27080:8080
-        links:
-            - chotuve_media_db
+        network_mode: host
     chotuve_media_db:
         image: mongo
         volumes:
             - chotuve_app_mongo_data:/data/db
+        ports:
+            - 27017:27017
 volumes:
         chotuve_app_mongo_data:
+
