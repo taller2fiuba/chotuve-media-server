@@ -9,7 +9,7 @@ exports.crear = (req, res) => {
     return videoRepositorio
       .guardar(video)
       .then(() => {
-        res.status(200).send({});
+        res.status(201).send({});
       })
       .catch(() => {
         res.status(500).send({});
