@@ -18,7 +18,7 @@ describe("VideoController", () => {
       .returns(Promise.resolve());
     videoController
       .crear(
-        { url: "https://urltest.com/video/1", titulo: "video test" },
+        { body: { url: "https://urltest.com/video/1", titulo: "video test" } },
         response
       )
       .then(() => {
@@ -35,7 +35,7 @@ describe("VideoController", () => {
       .returns(Promise.reject());
     videoController
       .crear(
-        { url: "https://urltest.com/video/1", titulo: "video test" },
+        { body: { url: "https://urltest.com/video/1", titulo: "video test" } },
         response
       )
       .then(() => {
@@ -47,14 +47,14 @@ describe("VideoController", () => {
   });
 
   it("debe responder 400 cuando creo un nuevo video sin url", () => {
-    videoController.crear({ url: "", titulo: "Sin url" }, response);
+    videoController.crear({ body: { url: "", titulo: "Sin url" } }, response);
     response.status.should.equal(400);
     response.data.mensaje.should.equal("La url del video es obligatoria");
   });
 
   it("debe responder 400 cuando creo un nuevo video sin titulo", () => {
     videoController.crear(
-      { url: "https://urltest.com/video/1", titulo: "" },
+      { body: { url: "https://urltest.com/video/1", titulo: "" } },
       response
     );
     response.status.should.equal(400);
