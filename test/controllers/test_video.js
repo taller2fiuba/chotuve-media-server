@@ -13,9 +13,7 @@ describe("VideoController", () => {
   });
 
   it("debe responder 200 creo un nuevo video correctamente", () => {
-    let stubGuardar = sinon
-      .stub(videoRepositorio, "guardar")
-      .returns(Promise.resolve());
+    let stubGuardar = sinon.stub(videoRepositorio, "guardar").resolves();
     videoController
       .crear(
         { body: { url: "https://urltest.com/video/1", titulo: "video test" } },
@@ -30,9 +28,7 @@ describe("VideoController", () => {
   });
 
   it("debe responder 500 cuando creo un nuevo video bien pero la base de datos falla", () => {
-    let stubGuardar = sinon
-      .stub(videoRepositorio, "guardar")
-      .returns(Promise.reject());
+    let stubGuardar = sinon.stub(videoRepositorio, "guardar").rejects();
     videoController
       .crear(
         { body: { url: "https://urltest.com/video/1", titulo: "video test" } },
