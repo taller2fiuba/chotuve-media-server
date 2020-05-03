@@ -1,14 +1,25 @@
+const _ = require("underscore");
 const Video = require("../models/video");
 const videoRepositorio = require("../repositorios/VideoRepositorio");
+
+function obtenerErrores(video) {
+  const errores = video.validateSync();
+  if (errores) {
+    var mapa = {};
+    _.each(_.values(errores.errors), function (error) {
+      mapa[error.path] = error.message;
+    });
+    return mapa;
+  }
+  return;
+}
 
 module.exports = {
   crear: (req, res) => {
     const video = new Video({ url: req.body.url, titulo: req.body.titulo });
-    const error = video.validateSync();
-    if (error && error.errors && error.errors["titulo"]) {
-      res.status(400).send({ mensaje: error.errors["titulo"].message });
-    } else if (error && error.errors && error.errors["url"]) {
-      res.status(400).send({ mensaje: error.errors["url"].message });
+    const errores = obtenerErrores(video);
+    if (errores) {
+      res.status(400).send({ errores: errores });
     } else {
       return videoRepositorio
         .guardar(video)

@@ -45,7 +45,7 @@ describe("VideoController", () => {
   it("debe responder 400 cuando creo un nuevo video sin url", () => {
     videoController.crear({ body: { url: "", titulo: "Sin url" } }, response);
     response.status.should.equal(400);
-    response.data.mensaje.should.equal("La url del video es obligatoria");
+    response.data.errores.url.should.equal("La url del video es obligatoria");
   });
 
   it("debe responder 400 cuando creo un nuevo video sin titulo", () => {
@@ -54,6 +54,6 @@ describe("VideoController", () => {
       response
     );
     response.status.should.equal(400);
-    response.data.mensaje.should.equal("El titulo es obligatorio");
+    response.data.errores.titulo.should.equal("El titulo es obligatorio");
   });
 });
