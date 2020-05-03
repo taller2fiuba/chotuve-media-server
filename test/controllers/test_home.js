@@ -1,23 +1,10 @@
 const chai = require("chai");
 const sinon = require("sinon");
-const homeController = require("../src/controllers/HomeController");
+const homeController = require("../../src/controllers/HomeController");
+const MockResponse = require("./MockResponse");
 
 const expect = chai.expect;
 const should = chai.should();
-
-class MockResponse {
-  constructor() {
-    this.data = {};
-  }
-
-  status(status) {
-    this.status = status;
-    return this;
-  }
-  send(data) {
-    this.data = data;
-  }
-}
 
 describe("HomeController", function () {
   beforeEach(() => {

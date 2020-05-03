@@ -1,6 +1,7 @@
 const express = require("express");
 require("./src/db/mongoose");
 const home_routers = require("./src/routers/home");
+const video_routers = require("./src/routers/video");
 const logger = require("./src/logger").logger;
 const loggerHttp = require("./src/logger").loggerHttp;
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(loggerHttp);
 
 app.use("/", home_routers);
+app.use("/video", video_routers);
 
 const server = app.listen(port, function () {
   logger.info("Media Server iniciado");

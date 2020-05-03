@@ -9,7 +9,7 @@
   "scripts": {
     "pretest": "eslint --ignore-path .gitignore .",
     "fix-lint": "eslint --fix --ignore-path .gitignore .",
-    "test": "istanbul cover _mocha",
+    "test": "istanbul cover _mocha -- --recursive",
     "coveralls": "istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "start": "node app.js | pino-pretty -c -l",
     "dev": "nodemon app.js 0.0.0.0:$PORT | pino-pretty -c -l",
