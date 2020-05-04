@@ -13,9 +13,7 @@ describe("VideoController", () => {
   });
 
   it("debe responder 200 creo un nuevo video correctamente", () => {
-    let stubGuardar = sinon
-      .stub(videoRepositorio, "guardar")
-      .returns(Promise.resolve());
+    let stubGuardar = sinon.stub(videoRepositorio, "guardar").resolves();
     videoController
       .crear(
         { body: { url: "https://urltest.com/video/1", titulo: "video test" } },
@@ -30,9 +28,7 @@ describe("VideoController", () => {
   });
 
   it("debe responder 500 cuando creo un nuevo video bien pero la base de datos falla", () => {
-    let stubGuardar = sinon
-      .stub(videoRepositorio, "guardar")
-      .returns(Promise.reject());
+    let stubGuardar = sinon.stub(videoRepositorio, "guardar").rejects();
     videoController
       .crear(
         { body: { url: "https://urltest.com/video/1", titulo: "video test" } },
@@ -49,7 +45,7 @@ describe("VideoController", () => {
   it("debe responder 400 cuando creo un nuevo video sin url", () => {
     videoController.crear({ body: { url: "", titulo: "Sin url" } }, response);
     response.status.should.equal(400);
-    response.data.mensaje.should.equal("La url del video es obligatoria");
+    response.data.errores.url.should.equal("La url del video es obligatoria");
   });
 
   it("debe responder 400 cuando creo un nuevo video sin titulo", () => {
@@ -58,6 +54,6 @@ describe("VideoController", () => {
       response
     );
     response.status.should.equal(400);
-    response.data.mensaje.should.equal("El titulo es obligatorio");
+    response.data.errores.titulo.should.equal("El titulo es obligatorio");
   });
 });
