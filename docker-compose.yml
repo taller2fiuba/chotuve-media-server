@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3'
 services:
     chotuve_media:
         build: .
@@ -6,10 +6,15 @@ services:
         links:
             - chotuve_media_db
         environment:
+            CHOTUVE_APP_URL: ${CHOTUVE_APP_URL:-http://chotuve_app:28080}
+            CHOTUVE_AUTH_URL: ${CHOTUVE_AUTH_URL:-http://chotuve_auth:26080}
             MONGODB_URL: "mongodb://chotuve_media_db:27017/chotuve-media-dev"
-            PORT: 8080
+            PORT: 27080
         ports:
-           - ${CHOTUVE_MEDIA_PORT:-27080}:8080
+           - ${CHOTUVE_MEDIA_PORT:-27080}:27080
+        networks:
+           - default
+           - chotuve
     chotuve_media_db:
         image: mongo
         restart: always
@@ -17,3 +22,6 @@ services:
             - chotuve_media_mongo_data:/data/db
 volumes:
         chotuve_media_mongo_data:
+networks:
+    chotuve:
+        external: true
