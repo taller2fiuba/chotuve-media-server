@@ -3,7 +3,11 @@ const controller = require("./Controller");
 const videoRepositorio = require("../repositorios/VideoRepositorio");
 
 exports.crear = (req, res) => {
-  const video = new Video({ url: req.body.url, titulo: req.body.titulo });
+  const video = new Video({
+    url: req.body.url,
+    titulo: req.body.titulo,
+    usuario_id: req.body.usuario_id,
+  });
   const errores = controller.responderErrores(res, video);
   if (!errores) {
     return videoRepositorio
