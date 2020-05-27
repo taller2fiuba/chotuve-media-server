@@ -115,7 +115,7 @@ describe("VideoController", () => {
     response.data.errores.usuario_id.should.equal("El id es inválido");
   });
 
-  it("debe responder 400 cuando creo un nuevo video con con visiblidad inválida", () => {
+  it("debe responder 400 cuando creo un nuevo video con visiblidad inválida", () => {
     videoController.crear(
       {
         body: {
@@ -142,7 +142,7 @@ describe("VideoController", () => {
           titulo: "video test",
           usuario_id: 1,
           duracion: 0,
-          visibilidad: "solo amigos",
+          visibilidad: "privado",
         },
       },
       response
@@ -158,7 +158,7 @@ describe("VideoController", () => {
           url: "https://urltest.com/video/1",
           titulo: "video test",
           usuario_id: 1,
-          visibilidad: "solo amigos",
+          visibilidad: "publico",
         },
       },
       response
