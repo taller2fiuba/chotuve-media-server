@@ -12,7 +12,7 @@ describe("VideoController", () => {
     response = new MockResponse();
   });
 
-  it("debe responder 200 creo un nuevo video correctamente", () => {
+  it("debe responder 201 creo un nuevo video correctamente", () => {
     let stubGuardar = sinon.stub(videoRepositorio, "guardar").resolves();
     videoController
       .crear(
@@ -21,12 +21,13 @@ describe("VideoController", () => {
             url: "https://urltest.com/video/1",
             titulo: "video test",
             usuario_id: 1,
+            duracion: 60,
           },
         },
         response
       )
       .then(() => {
-        response.status.should.equal(200);
+        response.status.should.equal(201);
       })
       .finally(() => {
         stubGuardar.restore();
@@ -42,6 +43,7 @@ describe("VideoController", () => {
             url: "https://urltest.com/video/1",
             titulo: "video test",
             usuario_id: 1,
+            duracion: 60,
           },
         },
         response
@@ -56,7 +58,7 @@ describe("VideoController", () => {
 
   it("debe responder 400 cuando creo un nuevo video sin url", () => {
     videoController.crear(
-      { body: { url: "", titulo: "Sin url", usuario_id: 1 } },
+      { body: { url: "", titulo: "Sin url", usuario_id: 1, duracion: 60 } },
       response
     );
     response.status.should.equal(400);
@@ -66,7 +68,12 @@ describe("VideoController", () => {
   it("debe responder 400 cuando creo un nuevo video sin titulo", () => {
     videoController.crear(
       {
-        body: { url: "https://urltest.com/video/1", titulo: "", usuario_id: 1 },
+        body: {
+          url: "https://urltest.com/video/1",
+          titulo: "",
+          usuario_id: 1,
+          duracion: 60,
+        },
       },
       response
     );
@@ -80,6 +87,7 @@ describe("VideoController", () => {
         body: {
           url: "https://urltest.com/video/1",
           titulo: "video test",
+          duracion: 60,
           usuario_id: null,
         },
       },
@@ -97,6 +105,7 @@ describe("VideoController", () => {
         body: {
           url: "https://urltest.com/video/1",
           titulo: "video test",
+          duracion: 0,
           usuario_id: 0,
         },
       },
@@ -113,6 +122,7 @@ describe("VideoController", () => {
           url: "https://urltest.com/video/1",
           titulo: "video test",
           usuario_id: 1,
+          duracion: 60,
           visibilidad: "solo amigos",
         },
       },
@@ -122,5 +132,38 @@ describe("VideoController", () => {
     response.data.errores.visibilidad.should.equal(
       "La visibilidad no es válida"
     );
+  });
+
+  it("debe responder 400 cuando creo un nuevo video con duracion inválida", () => {
+    videoController.crear(
+      {
+        body: {
+          url: "https://urltest.com/video/1",
+          titulo: "video test",
+          usuario_id: 1,
+          duracion: 0,
+          visibilidad: "solo amigos",
+        },
+      },
+      response
+    );
+    response.status.should.equal(400);
+    response.data.errores.duracion.should.equal("La duración no es válida");
+  });
+
+  it("debe responder 400 cuando creo un nuevo video sin duracion", () => {
+    videoController.crear(
+      {
+        body: {
+          url: "https://urltest.com/video/1",
+          titulo: "video test",
+          usuario_id: 1,
+          visibilidad: "solo amigos",
+        },
+      },
+      response
+    );
+    response.status.should.equal(400);
+    response.data.errores.duracion.should.equal("La duración es obligatoria");
   });
 });

@@ -22,6 +22,11 @@ const videoSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  duracion: {
+    type: Number,
+    required: [true, "La duración es obligatoria"],
+    min: [1, "La duración no es válida"],
+  },
   visibilidad: {
     type: String,
     enum: {
@@ -31,6 +36,10 @@ const videoSchema = new mongoose.Schema({
     default: "publico",
   },
   time_stamp: { type: Date, default: Date.now },
+  habilitado: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const Video = mongoose.model("Video", videoSchema);
