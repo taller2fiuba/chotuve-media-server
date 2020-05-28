@@ -7,6 +7,10 @@ exports.crear = (req, res) => {
     url: req.body.url,
     titulo: req.body.titulo,
     usuario_id: req.body.usuario_id,
+    descripcion: req.body.descripcion,
+    ubicacion: req.body.ubicacion,
+    visibilidad: req.body.visibilidad,
+    duracion: req.body.duracion,
   });
   const errores = controller.responderErrores(res, video);
   if (!errores) {

@@ -14,6 +14,32 @@ const videoSchema = new mongoose.Schema({
     required: [true, "El id de usuario es obligatorio"],
     min: [1, "El id es inválido"],
   },
+  descripcion: {
+    type: String,
+    default: "",
+  },
+  ubicacion: {
+    type: String,
+    default: "",
+  },
+  duracion: {
+    type: Number,
+    required: [true, "La duración es obligatoria"],
+    min: [1, "La duración no es válida"],
+  },
+  visibilidad: {
+    type: String,
+    enum: {
+      values: ["publico", "privado"],
+      message: "La visibilidad no es válida",
+    },
+    default: "publico",
+  },
+  time_stamp: { type: Date, default: Date.now },
+  habilitado: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const Video = mongoose.model("Video", videoSchema);
