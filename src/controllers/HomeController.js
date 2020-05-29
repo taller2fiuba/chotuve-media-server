@@ -1,13 +1,16 @@
-const mongosse = require("mongoose");
+const mongoose = require("mongoose");
 
 module.exports = {
   ping: (req, res) => {
     res.status(200).send({});
   },
   borrar_base: (req, res) => {
-    mongosse.connection.db
-      .dropDatabase()
-      .then(res.status(200).send({}))
-      .catch(res.status(500).send({}));
+    mongoose.connection.dropDatabase((error) => {
+      if (!error) {
+        res.status(200).send();
+      } else {
+        res.status(500).send();
+      }
+    });
   },
 };
