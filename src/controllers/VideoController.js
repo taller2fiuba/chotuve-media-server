@@ -24,3 +24,13 @@ exports.crear = (req, res) => {
       });
   }
 };
+
+exports.mostrar = (req, res) => {
+  const offset = req.query.offset;
+  const cantidad = req.query.cantidad;
+  return Video.paginate({}, { offset: offset, limit: cantidad })
+    .then((resultado) => {
+      res.status(200).send(resultado.docs);
+    })
+    .catch(() => res.status(500).send({}));
+};

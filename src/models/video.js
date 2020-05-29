@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const mongoosePaginate = require("mongoose-paginate-v2");
 
 const videoSchema = new mongoose.Schema({
   titulo: {
@@ -41,6 +42,8 @@ const videoSchema = new mongoose.Schema({
     default: true,
   },
 });
+
+videoSchema.plugin(mongoosePaginate);
 
 const Video = mongoose.model("Video", videoSchema);
 
