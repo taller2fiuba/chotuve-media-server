@@ -3,5 +3,6 @@ const videoController = require("../controllers/VideoController");
 const router = express.Router();
 
 router.post("/", videoController.crear);
+router.get("/", videoController.mostrar);
 
 module.exports = router;
