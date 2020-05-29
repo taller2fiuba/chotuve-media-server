@@ -17,11 +17,11 @@ const videoSchema = new mongoose.Schema({
   },
   descripcion: {
     type: String,
-    default: "",
+    default: null,
   },
   ubicacion: {
     type: String,
-    default: "",
+    default: null,
   },
   duracion: {
     type: Number,
