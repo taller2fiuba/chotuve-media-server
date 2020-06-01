@@ -13,4 +13,11 @@ describe("HomeController", () => {
       done();
     });
   });
+
+  it("debe responder 200 OK cuando llamo  a base_de_datos", (done) => {
+    server.delete("/base_de_datos").end(function (err, res) {
+      expect(res).to.have.status(200);
+      done();
+    });
+  });
 });

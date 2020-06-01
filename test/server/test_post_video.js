@@ -5,22 +5,31 @@ let chaiHttp = require("chai-http");
 const expect = require("chai").expect;
 chai.use(chaiHttp);
 const server = chai.request.agent(`http://localhost:${process.env.PORT}`);
-
+const Video = require("../../src/models/video");
 const should = chai.should();
 
-describe("VideoController", () => {
+describe("Subir video", () => {
+  beforeEach(function (done) {
+    Video.remove({}, () => {
+      done();
+    });
+  });
+
   it("debe responder 201 creo un nuevo video correctamente", (done) => {
     server
       .post("/video")
       .send({
-        url: "https://urltest.com/video/1",
+        url: "https://urltest.com/video/123",
         titulo: "video test",
         usuario_id: 1,
         duracion: 60,
       })
       .end(function (err, res) {
         expect(res).to.have.status(201);
-        done();
+        Video.find().count((err, cantidad) => {
+          expect(cantidad).to.eq(1);
+          done();
+        });
       });
   });
 

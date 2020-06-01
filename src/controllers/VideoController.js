@@ -1,6 +1,9 @@
 const Video = require("../models/video");
 const controller = require("./Controller");
 
+const OFFSET_POR_DEFECTO = 0;
+const CANTIDAD_POR_DEFECTO = 10;
+
 exports.crear = (req, res) => {
   const video = new Video({
     url: req.body.url,
@@ -19,9 +22,11 @@ exports.crear = (req, res) => {
   }
 };
 
-exports.mostrar = (req, res) => {
-  const offset = req.query.offset;
-  const cantidad = req.query.cantidad;
+exports.obtener = (req, res) => {
+  const offset = req.query.offset ? req.query.offset : OFFSET_POR_DEFECTO;
+  const cantidad = req.query.cantidad
+    ? req.query.cantidad
+    : CANTIDAD_POR_DEFECTO;
   Video.paginate({}, { offset: offset, limit: cantidad }).then((resultado) => {
     res.status(200).send(resultado.docs);
   });
