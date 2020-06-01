@@ -12,12 +12,23 @@ const port = process.env.PORT;
 
 // middleware que parsea a json todo los request
 app.use(express.json());
-// Logeador de errores en requests
+// Logeador de responses
 app.use(loggerHttp);
 app.use(cors());
 
 app.use("/", home_routers);
 app.use("/video", video_routers);
+
+// manejador cuando una excepcion no se catchea
+function errorHandler(err, req, res, next) {
+  if (res.headersSent) {
+    return next(err);
+  }
+  logger.error(err, "Excepción no catcheada");
+  res.status(500);
+}
+
+app.use(errorHandler);
 
 const server = app.listen(port, function () {
   logger.info("Media Server iniciado");
