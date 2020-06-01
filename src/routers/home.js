@@ -1,9 +1,10 @@
 const express = require("express");
 const homeController = require("../controllers/HomeController");
 const router = express.Router();
+const config = require("../config");
 
 router.get("/ping", homeController.ping);
-if (process.env.NODE_ENV == "development") {
+if (config.node_env == "development") {
   router.delete("/base_de_datos", homeController.borrar_base);
 }
 

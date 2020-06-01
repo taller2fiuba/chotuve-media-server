@@ -10,7 +10,6 @@ services:
             CHOTUVE_AUTH_URL: ${CHOTUVE_AUTH_URL:-http://chotuve_auth:26080}
             MONGODB_URL: "mongodb://chotuve_media_db:27017/chotuve-media-dev"
             PORT: 27080
-            NODE_ENV: "production"
         ports:
            - ${CHOTUVE_MEDIA_PORT:-27080}:27080
         networks:
