@@ -1,6 +1,5 @@
 const Video = require("../models/video");
 const controller = require("./Controller");
-const videoRepositorio = require("../repositorios/VideoRepositorio");
 
 exports.crear = (req, res) => {
   const video = new Video({
@@ -14,7 +13,7 @@ exports.crear = (req, res) => {
   });
   const errores = controller.responderErrores(res, video);
   if (!errores) {
-    return videoRepositorio.guardar(video).then(() => {
+    video.save().then(() => {
       res.status(201).send({});
     });
   }
@@ -23,9 +22,7 @@ exports.crear = (req, res) => {
 exports.mostrar = (req, res) => {
   const offset = req.query.offset;
   const cantidad = req.query.cantidad;
-  return Video.paginate({}, { offset: offset, limit: cantidad })
-    .then((resultado) => {
-      res.status(200).send(resultado.docs);
-    })
-    .catch(() => res.status(500).send({}));
+  Video.paginate({}, { offset: offset, limit: cantidad }).then((resultado) => {
+    res.status(200).send(resultado.docs);
+  });
 };

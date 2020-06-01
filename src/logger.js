@@ -17,11 +17,11 @@ const loggerHttp = pino_http({
   },
 });
 
-// Loggear excepciones no cacheadas
+// Loggear excepciones no cacheadas, si alguna no la detecta express o mismo express la genera
 process.on(
   "uncaughtException",
   pino.final(logger, (err, finalLogger) => {
-    finalLogger.error(err, "Excepcion no catcheada");
+    finalLogger.error(err, "Excepción no catcheada");
   })
 );
 
