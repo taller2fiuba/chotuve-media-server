@@ -4,32 +4,32 @@ const process = require("process");
 
 const logger = pino({ level: "debug" });
 
-const loggerWarn = pino({ level: "warn" });
+const loggerInfo = pino({ level: "info" });
 const loggerHttp = pino_http({
-  logger: loggerWarn,
+  logger: loggerInfo,
   customLogLevel: (res, err) => {
+    // errores a warn
     if (res.statusCode >= 500 || err) {
       return "warn";
     }
-    // no logea otras cosas porque el logger es loggerWarn
+    // el resto de respuestas a info
     return "info";
   },
 });
 
-// Loggear errores fatales en el proceso node
+// Loggear excepciones no cacheadas
 process.on(
   "uncaughtException",
   pino.final(logger, (err, finalLogger) => {
-    finalLogger.error(err, "uncaughtException");
-    process.exit(1);
+    finalLogger.error(err, "Excepcion no catcheada");
   })
 );
 
+// Loggear rejects no cacheados
 process.on(
   "unhandledRejection",
   pino.final(logger, (err, finalLogger) => {
-    finalLogger.error(err, "unhandledRejection");
-    process.exit(1);
+    finalLogger.error(err, "Promise reject no catcheado");
   })
 );
 

@@ -9,11 +9,25 @@
   "scripts": {
     "pretest": "eslint --ignore-path .gitignore .",
     "fix-lint": "eslint --fix --ignore-path .gitignore .",
-    "test": "istanbul cover _mocha -- --recursive",
-    "coveralls": "istanbul cover _mocha -- --recursive --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "test": "nyc --reporter=text _mocha -- --recursive -- --exit",
+    "coveralls": "nyc --reporter=lcovonly _mocha -- --recursive -- --exit -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "start": "node app.js | pino-pretty -c -l",
     "dev": "nodemon app.js 0.0.0.0:$PORT | pino-pretty -c -l",
     "debug": "mocha --inspect-brk test/test.js"
+  },
+  "nyc": {
+    "_comment": "Purpose of this part: to do code coverage within Mocha/Chai using Istanbul",
+    "register": "babel-register",
+    "include": [
+      "**/*.js",
+      "./*.js"
+    ],
+    "exclude": [
+      "**/node_modules/**",
+      "**/test/**",
+      "**/coverage/**"
+    ],
+    "all": true
   },
   "keywords": [
     "nodejs",
@@ -33,6 +47,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "coveralls": "^3.0.13",
     "env-cmd": "^10.1.0",
     "eslint": "^6.8.0",
@@ -41,9 +56,10 @@
     "eslint-config-strongloop": "^2.1.0",
     "eslint-plugin-prettier": "^3.1.3",
     "istanbul": "^0.4.5",
-    "mocha": "^7.1.2",
+    "mocha": "^7.2.0",
     "mocha-lcov-reporter": "^1.3.0",
     "nodemon": "^2.0.3",
+    "nyc": "^15.0.1",
     "prettier": "^2.0.5",
     "sinon": "^9.0.2"
   }

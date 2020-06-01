@@ -12,7 +12,7 @@ const port = process.env.PORT;
 
 // middleware que parsea a json todo los request
 app.use(express.json());
-// Logeador de errores en requests
+// Logeador de responses
 app.use(loggerHttp);
 app.use(cors());
 

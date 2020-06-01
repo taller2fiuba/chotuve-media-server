@@ -14,14 +14,9 @@ exports.crear = (req, res) => {
   });
   const errores = controller.responderErrores(res, video);
   if (!errores) {
-    return videoRepositorio
-      .guardar(video)
-      .then(() => {
-        res.status(201).send({});
-      })
-      .catch(() => {
-        res.status(500).send({});
-      });
+    return videoRepositorio.guardar(video).then(() => {
+      res.status(201).send({});
+    });
   }
 };
 
