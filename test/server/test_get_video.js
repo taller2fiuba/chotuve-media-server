@@ -73,4 +73,29 @@ describe("Obtener video", () => {
       });
     });
   });
+
+  it("get video con id inexistente devuelve 404", (done) => {
+    server.get("/video/klasdpo79da9d").end((err, res) => {
+      expect(res).to.have.status(404);
+      expect(res.body).to.eql({});
+      done();
+    });
+  });
+
+  it("get video con id correcto obtiene video", (done) => {
+    const video = new Video({
+      url: "url/test",
+      titulo: "video test",
+      usuario_id: 1,
+      duracion: 60,
+    });
+
+    video.save().then(() => {
+      server.get(`/video/${video._id}`).end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body["_id"]).to.eq(`${video._id}`);
+        done();
+      });
+    });
+  });
 });

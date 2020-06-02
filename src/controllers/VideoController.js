@@ -31,3 +31,11 @@ exports.obtener = (req, res) => {
     res.status(200).send(resultado.docs);
   });
 };
+
+exports.obtener_por_id = (req, res) => {
+  const id = req.params.id;
+  Video.findById(id, (err, video) => {
+    if (err) return res.status(404).send({});
+    res.status(200).send(video);
+  });
+};
