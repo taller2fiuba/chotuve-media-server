@@ -28,6 +28,14 @@ exports.obtener = (req, res) => {
     ? req.query.cantidad
     : CANTIDAD_POR_DEFECTO;
   Video.paginate({}, { offset: offset, limit: cantidad }).then((resultado) => {
-    res.status(200).send(resultado.docs);
+    res.status(200).json(resultado.docs);
+  });
+};
+
+exports.obtener_por_id = (req, res) => {
+  const id = req.params.id;
+  Video.findById(id, (err, video) => {
+    if (err) return res.status(404).json({});
+    res.status(200).json(video);
   });
 };
