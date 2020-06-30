@@ -19,8 +19,7 @@ exports.crear = (req, res) => {
   const errores = controller.responderErrores(res, video);
   if (!errores) {
     video.save().then(() => {
-      //res.status(201).send({});
-      res.status(201).send(video);
+      res.status(201).send({});
     });
   }
 };
@@ -55,10 +54,8 @@ exports.cambiar_habilitacion = (req, res) => {
   Video.findById(id, (err, video) => {
     if (err) return res.status(404).json({});
     video.habilitado = req.body.habilitado;
-    video.save(function (err, doc) {
-      if (err) return logger.error(err);
-      logger.info("Document inserted succussfully!");
+    video.save().then(() => {
+      res.status(200).json(video);
     });
-    res.status(200).json(video);
   });
 };
