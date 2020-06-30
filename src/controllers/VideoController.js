@@ -4,7 +4,6 @@ const logger = require("../logger").logger;
 
 const OFFSET_POR_DEFECTO = 0;
 const CANTIDAD_POR_DEFECTO = 10;
-const HABILITACION_POR_DEFECTO = true;
 
 exports.crear = (req, res) => {
   const video = new Video({
@@ -30,10 +29,9 @@ exports.obtener = (req, res) => {
     ? req.query.cantidad
     : CANTIDAD_POR_DEFECTO;
 
-  let solo_habilitados = HABILITACION_POR_DEFECTO;
-  if (req.query.solo_habilitados === "false") solo_habilitados = false;
   let filter_param = {};
-  if (solo_habilitados === true) filter_param = { habilitado: true };
+  if (req.query.solo_habilitados === "true") filter_param["habilitado"] = true;
+  if (req.query.usuario_id) filter_param["usuario_id"] = req.query.usuario_id;
   Video.paginate(filter_param, { offset: offset, limit: cantidad }).then(
     (resultado) => {
       res.status(200).json(resultado.docs);

@@ -169,4 +169,38 @@ describe("Obtener video", () => {
       });
     });
   });
+
+  it("get video de un usuario sin videos no devuelve devuelve nada", (done) => {
+    const video = new Video({
+      url: "url/test",
+      titulo: "video test",
+      usuario_id: 2,
+      duracion: 60,
+      habilitado: false,
+    });
+    video.save().then(() => {
+      server.get(`/video/?usuario_id=1`).end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.length).to.eq(0);
+        done();
+      });
+    });
+  });
+
+  it("get video de un usuario con un videos devuelve el video", (done) => {
+    const video = new Video({
+      url: "url/test",
+      titulo: "video test",
+      usuario_id: 1,
+      duracion: 60,
+      habilitado: false,
+    });
+    video.save().then(() => {
+      server.get(`/video/?usuario_id=1`).end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.length).to.eq(1);
+        done();
+      });
+    });
+  });
 });
