@@ -47,11 +47,23 @@ exports.obtener_por_id = (req, res) => {
   });
 };
 
-exports.cambiar_habilitacion = (req, res) => {
+exports.actualizar_video = (req, res) => {
   const id = req.params.id;
   Video.findById(id, (err, video) => {
     if (err) return res.status(404).json({});
-    video.habilitado = req.body.habilitado;
+
+    video.habilitado = req.body.habilitado
+      ? req.body.habilitado
+      : video.habilitado;
+    video.titulo = req.body.titulo ? req.body.titulo : video.titulo;
+    video.descripcion = req.body.descripcion
+      ? req.body.descripcion
+      : video.descripcion;
+    video.ubicacion = req.body.ubicacion ? req.body.ubicacion : video.ubicacion;
+    video.visibilidad = req.body.visibilidad
+      ? req.body.visibilidad
+      : video.visibilidad;
+
     video.save().then(() => {
       res.status(200).json(video);
     });
