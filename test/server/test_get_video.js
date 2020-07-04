@@ -193,7 +193,7 @@ describe("Obtener video", () => {
       titulo: "video test",
       usuario_id: 1,
       duracion: 60,
-      habilitado: false,
+      habilitado: true,
     });
     video.save().then(() => {
       server.get(`/video/?usuario_id=1`).end((err, res) => {

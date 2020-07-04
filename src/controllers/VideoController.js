@@ -30,7 +30,12 @@ exports.obtener = (req, res) => {
     : CANTIDAD_POR_DEFECTO;
 
   let filter_param = {};
-  if (req.query.solo_habilitados === "true") filter_param["habilitado"] = true;
+  if (
+    req.query.solo_habilitados === "true" ||
+    !req.query.hasOwnProperty("solo_habilitados")
+  ) {
+    filter_param["habilitado"] = true;
+  }
   if (req.query.usuario_id) filter_param["usuario_id"] = req.query.usuario_id;
   Video.paginate(filter_param, { offset: offset, limit: cantidad }).then(
     (resultado) => {
@@ -51,10 +56,9 @@ exports.actualizar_video = (req, res) => {
   const id = req.params.id;
   Video.findById(id, (err, video) => {
     if (err) return res.status(404).json({});
-
-    video.habilitado = req.body.habilitado
-      ? req.body.habilitado
-      : video.habilitado;
+    if (req.body.hasOwnProperty("habilitado")) {
+      video.habilitado = req.body.habilitado;
+    }
     video.titulo = req.body.titulo ? req.body.titulo : video.titulo;
     video.descripcion = req.body.descripcion
       ? req.body.descripcion
