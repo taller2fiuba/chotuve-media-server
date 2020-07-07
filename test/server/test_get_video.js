@@ -98,4 +98,109 @@ describe("Obtener video", () => {
       });
     });
   });
+
+  it("get video con solo_habilitados false obtiene todos los videos", (done) => {
+    const video = new Video({
+      url: "url/test",
+      titulo: "video test",
+      usuario_id: 1,
+      duracion: 60,
+    });
+
+    video.save().then(() => {
+      server.get(`/video/?solo_habilitados=false`).end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.length).to.eq(1);
+        done();
+      });
+    });
+  });
+
+  it("get video con solo_habilitados false obtiene video deshabilitado", (done) => {
+    const video = new Video({
+      url: "url/test",
+      titulo: "video test",
+      usuario_id: 1,
+      duracion: 60,
+      habilitado: false,
+    });
+
+    video.save().then(() => {
+      const video2 = new Video({
+        url: "url/test",
+        titulo: "video test",
+        usuario_id: 1,
+        duracion: 60,
+      });
+      video2.save().then(() => {
+        server.get(`/video/?solo_habilitados=false`).end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.length).to.eq(2);
+          expect(res.body[0]["habilitado"]).to.eq(false);
+          done();
+        });
+      });
+    });
+  });
+
+  it("get video con solo_habilitados true no obtiene video deshabilitado", (done) => {
+    const video = new Video({
+      url: "url/test",
+      titulo: "video test",
+      usuario_id: 1,
+      duracion: 60,
+      habilitado: false,
+    });
+
+    video.save().then(() => {
+      const video2 = new Video({
+        url: "url/test",
+        titulo: "video test",
+        usuario_id: 1,
+        duracion: 60,
+      });
+      video2.save().then(() => {
+        server.get(`/video/?solo_habilitados=true`).end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.length).to.eq(1);
+          expect(res.body[0]["habilitado"]).to.eq(true);
+          done();
+        });
+      });
+    });
+  });
+
+  it("get video de un usuario sin videos no devuelve devuelve nada", (done) => {
+    const video = new Video({
+      url: "url/test",
+      titulo: "video test",
+      usuario_id: 2,
+      duracion: 60,
+      habilitado: false,
+    });
+    video.save().then(() => {
+      server.get(`/video/?usuario_id=1`).end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.length).to.eq(0);
+        done();
+      });
+    });
+  });
+
+  it("get video de un usuario con un videos devuelve el video", (done) => {
+    const video = new Video({
+      url: "url/test",
+      titulo: "video test",
+      usuario_id: 1,
+      duracion: 60,
+      habilitado: true,
+    });
+    video.save().then(() => {
+      server.get(`/video/?usuario_id=1`).end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.length).to.eq(1);
+        done();
+      });
+    });
+  });
 });
