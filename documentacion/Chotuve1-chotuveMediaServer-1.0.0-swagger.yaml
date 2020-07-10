@@ -1,0 +1,249 @@
+swagger: '2.0'
+info:
+  description: Api de Chotuve Media Server
+  version: 1.0.0
+  title: Chotuve Media Server
+  # put the contact info for your development or API team
+  # contact:
+    # email: you@your-company.com
+
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+paths:
+  /ping:
+    get:
+      summary: Ping del media server
+      operationId: ping
+      description: Permite ver el estado del servidor
+      produces:
+      - application/json
+      responses:
+        200:
+          description: El servidor esta activo
+  /video:
+    get:
+      summary: Obtener videos
+      operationId: obtenerVideos
+      description: |
+        Devuelve los videos paginados y que conciden con los parámetros. 
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: solo_habilitados
+        description: filtro sobre el campo habilitado
+        type: boolean
+        default: false
+      - in: query
+        name: offset
+        description: numero de registros a omitir para paginación
+        type: integer
+        format: int32
+        minimum: 0
+        default: 0
+      - in: query
+        name: limit
+        description: máximo número de registros a devolver
+        type: integer
+        format: int32
+        minimum: 0
+        default: 10
+      responses:
+        200:
+          description: resultados que coinciden con el criterio
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/VideoResponse'
+    post:
+      summary: Agrega un video 
+      operationId: agregarVideo
+      description: Agrega un video al sistema
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: video
+        description: Video a agregar
+        schema:
+          $ref: '#/definitions/VideoRequest'
+      responses:
+        201:
+          description: video creado
+        400:
+          description: video inválido, devuelve los errores.
+          schema:
+            $ref: '#/definitions/Errores'
+  /video/{id}:
+    get:
+      summary: Obtener un video por Id
+      operationId: obtenerVideoPorId
+      description: Devuelve el video que coincide con el id
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Video id
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/VideoResponse'
+        404:
+          description: El video no existe
+    put:
+      summary: Editar un video
+      operationId: editarVideo
+      description: Edita el video dado por el id
+      consumes:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Video id
+          type: string
+          required: true
+        - in: body
+          name: video 
+          description: Campos a editar del video
+          schema:
+            $ref: '#/definitions/VideoRequestEdit'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/VideoResponse'
+        404:
+          description: El video no existe
+
+definitions:
+  VideoResponse:
+    properties:
+      id:
+        type: string
+        example: Asasda987987aErdaX2
+      titulo:
+        type: string
+        example: Mi primer video
+      url:
+        type: string
+        format: url
+        example:  https://www.firebase.com/poerw/asdsd.mp4
+        description: URL donde del recurso
+      usuario_id:
+        type: integer
+        format: int64
+        example: 126
+        minimum: 1
+      duracion: 
+        type: integer
+        format: int64
+        description: duracion en segundos
+        example: 120
+      descripcion:
+        type: string
+        example: Fue grabado con mi webcam
+      ubicacion:
+        type: string
+        example: Av Paseo Colón 800
+      visibilidad:
+        type: string
+        enum: [publico, privado]
+        default: publico
+        example: privado
+      habilitado:
+        type: boolean
+        default: true
+        example: true
+      time_stamp:
+        type: string
+        format: date-time
+        example: 2016-08-29T09:12:33.001Z
+  VideoRequest:
+    required: 
+      - titulo
+      - url
+      - usuario_id
+      - duracion
+    properties:
+      titulo:
+        type: string
+        example: Mi primer video
+      url:
+        type: string
+        format: url
+        example:  https://www.firebase.com/poerw/asdsd.mp4
+        description: URL donde del recurso
+      usuario_id:
+        type: integer
+        format: int64
+        example: 126
+        minimum: 1
+      duracion: 
+        type: integer
+        format: int64
+        description: duracion en segundos
+        example: 120
+      descripcion:
+        type: string
+        example: Fue grabado con mi webcam
+      ubicacion:
+        type: string
+        example: Av Paseo Colón 800
+      visibilidad:
+        type: string
+        enum: [publico, privado]
+        default: publico
+        example: privado
+  VideoRequestEdit:
+    required: 
+      - titulo
+    properties:
+      titulo:
+        type: string
+        example: Mi segundo video
+      descripcion:
+        type: string
+        example: Fue grabado con mi webcam
+      ubicacion:
+        type: string
+        example: Av Paseo Colón 800
+      visibilidad:
+        type: string
+        enum: [publico, privado]
+        default: publico
+        example: privado
+  Errores:
+    type: object
+    properties:
+      errores:
+        type: object
+        properties:
+          titulo:
+            type: string
+            example: "El titulo es obligatorio"
+          url:
+            type: string
+            example: "La url del video es obligatoria"
+          usuario_id:
+            type: string
+            example: "El id de usuario es obligatorio"
+          duracion:
+            type: string
+            example: "La duración no es válida"
+          visibilidad:
+            type: string
+            example: "La visibilidad no es válida"
+  
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /Chotuve1/chotuveMediaServer/1.0.0
+schemes:
+ - https
