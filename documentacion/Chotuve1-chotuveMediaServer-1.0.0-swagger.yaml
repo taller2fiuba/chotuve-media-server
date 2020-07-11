@@ -3,10 +3,6 @@ info:
   description: Api de Chotuve Media Server
   version: 1.0.0
   title: Chotuve Media Server
-  # put the contact info for your development or API team
-  # contact:
-    # email: you@your-company.com
-
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
@@ -26,8 +22,7 @@ paths:
     get:
       summary: Obtener videos
       operationId: obtenerVideos
-      description: |
-        Devuelve los videos paginados y que conciden con los parámetros. 
+      description: Devuelve los videos paginados y que conciden con los parámetros. 
       produces:
       - application/json
       parameters:
