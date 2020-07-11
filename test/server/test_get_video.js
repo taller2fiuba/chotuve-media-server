@@ -181,7 +181,8 @@ describe("Obtener video", () => {
     video.save().then(() => {
       server.get(`/video/?usuario_id=1`).end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.length).to.eq(0);
+        expect(res.body["videos"].length).to.eq(0);
+        expect(res.body["cantidad_de_videos"]).to.eq(0);
         done();
       });
     });
@@ -197,8 +198,8 @@ describe("Obtener video", () => {
     });
     video.save().then(() => {
       server.get(`/video/?usuario_id=1`).end((err, res) => {
-        expect(res).to.have.status(200);
-        expect(res.body.length).to.eq(1);
+        expect(res.body["videos"].length).to.eq(1);
+        expect(res.body["cantidad_de_videos"]).to.eq(1);
         done();
       });
     });
