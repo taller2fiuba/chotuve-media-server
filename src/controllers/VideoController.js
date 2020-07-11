@@ -42,16 +42,11 @@ exports.obtener = (req, res) => {
   Video.paginate(filter_param, { offset: offset, limit: cantidad }).then(
     (resultado) => {
       if (filter_param["usuario_id"]) {
-        Video.countDocuments({ usuario_id: req.query.usuario_id }, function (
-          err,
-          count
-        ) {
-          let response = {
-            videos: resultado.docs,
-            "cantidad-videos": count,
-          };
-          res.status(200).json(response);
-        });
+        let response = {
+          videos: resultado.docs,
+          total: resultado.totalDocs,
+        };
+        res.status(200).json(response);
       } else {
         res.status(200).json(resultado.docs);
       }
