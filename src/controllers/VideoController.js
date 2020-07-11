@@ -48,7 +48,7 @@ exports.obtener = (req, res) => {
         ) {
           let response = {
             videos: resultado.docs,
-            cantidad_de_videos: count,
+            "cantidad-videos": count,
           };
           res.status(200).json(response);
         });
