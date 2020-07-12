@@ -39,6 +39,20 @@ exports.obtener = (req, res) => {
   if (req.query.usuario_id) {
     filter_param["usuario_id"] = req.query.usuario_id;
   }
+  if (req.body.hasOwnProperty("contactos")) {
+    filter_param["visibilidad"] = "publico";
+    filter_param = {
+      $or: [
+        {
+          usuario_id: {
+            $in: req.body.contactos,
+          },
+          habilitado: true,
+        },
+        filter_param,
+      ],
+    };
+  }
   Video.paginate(filter_param, { offset: offset, limit: cantidad }).then(
     (resultado) => {
       let response = {
