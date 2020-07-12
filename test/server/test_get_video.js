@@ -18,7 +18,8 @@ describe("Obtener video", () => {
   it("debe responder 200 y lista vacía si no hay videos", (done) => {
     server.get("/video").end(function (err, res) {
       expect(res).to.have.status(200);
-      expect(res.body.length).to.eq(0);
+      expect(res.body["videos"].length).to.eq(0);
+      expect(res.body["total"]).to.eq(0);
       done();
     });
   });
@@ -34,7 +35,8 @@ describe("Obtener video", () => {
     video.save().then(() => {
       server.get("/video").end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.length).to.eq(1);
+        expect(res.body["videos"].length).to.eq(1);
+        expect(res.body["total"]).to.eq(1);
         done();
       });
     });
@@ -51,7 +53,8 @@ describe("Obtener video", () => {
     video.save().then(() => {
       server.get("/video?offset=0&cantidad=10").end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.length).to.eq(1);
+        expect(res.body["videos"].length).to.eq(1);
+        expect(res.body["total"]).to.eq(1);
         done();
       });
     });
@@ -68,7 +71,7 @@ describe("Obtener video", () => {
     video.save().then(() => {
       server.get("/video?offset=10&cantidad=10").end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.length).to.eq(0);
+        expect(res.body["videos"].length).to.eq(0);
         done();
       });
     });
@@ -110,7 +113,8 @@ describe("Obtener video", () => {
     video.save().then(() => {
       server.get(`/video/?solo_habilitados=false`).end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.length).to.eq(1);
+        expect(res.body["videos"].length).to.eq(1);
+        expect(res.body["total"]).to.eq(1);
         done();
       });
     });
@@ -135,8 +139,9 @@ describe("Obtener video", () => {
       video2.save().then(() => {
         server.get(`/video/?solo_habilitados=false`).end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.length).to.eq(2);
-          expect(res.body[0]["habilitado"]).to.eq(false);
+          expect(res.body["videos"].length).to.eq(2);
+          expect(res.body["total"]).to.eq(2);
+          expect(res.body["videos"][0]["habilitado"]).to.eq(false);
           done();
         });
       });
@@ -162,8 +167,9 @@ describe("Obtener video", () => {
       video2.save().then(() => {
         server.get(`/video/?solo_habilitados=true`).end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.length).to.eq(1);
-          expect(res.body[0]["habilitado"]).to.eq(true);
+          expect(res.body["videos"].length).to.eq(1);
+          expect(res.body["total"]).to.eq(1);
+          expect(res.body["videos"][0]["habilitado"]).to.eq(true);
           done();
         });
       });

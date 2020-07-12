@@ -41,15 +41,11 @@ exports.obtener = (req, res) => {
   }
   Video.paginate(filter_param, { offset: offset, limit: cantidad }).then(
     (resultado) => {
-      if (filter_param["usuario_id"]) {
-        let response = {
-          videos: resultado.docs,
-          total: resultado.totalDocs,
-        };
-        res.status(200).json(response);
-      } else {
-        res.status(200).json(resultado.docs);
-      }
+      let response = {
+        videos: resultado.docs,
+        total: resultado.totalDocs,
+      };
+      res.status(200).json(response);
     }
   );
 };
