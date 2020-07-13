@@ -210,4 +210,74 @@ describe("Obtener video", () => {
       });
     });
   });
+
+  it("get video de un usuario con video privado sin ser amigo devuelve vacio", (done) => {
+    const video = new Video({
+      url: "url/test",
+      titulo: "video test",
+      usuario_id: 1,
+      duracion: 60,
+      habilitado: true,
+      visibilidad: "privado",
+    });
+    video.save().then(() => {
+      server
+        .get(`/video/?usuario_id=1`)
+        .send({
+          contactos: [],
+        })
+        .end((err, res) => {
+          expect(res.body["videos"].length).to.eq(0);
+          expect(res.body["total"]).to.eq(0);
+          done();
+        });
+    });
+  });
+
+  it("get video de un usuario con video privado siendo amigo devuelve el video", (done) => {
+    const video = new Video({
+      url: "url/test",
+      titulo: "video test",
+      usuario_id: 1,
+      duracion: 60,
+      habilitado: true,
+      visibilidad: "privado",
+    });
+    video.save().then(() => {
+      server
+        .get(`/video/?usuario_id=1`)
+        .send({
+          contactos: [1],
+        })
+        .end((err, res) => {
+          expect(res.body["videos"].length).to.eq(1);
+          expect(res.body["total"]).to.eq(1);
+          done();
+        });
+    });
+  });
+
+  it("get video de un usuario con video privado e inhabilitado siendo amigo devuelve vacio", (done) => {
+    const video = new Video({
+      url: "url/test",
+      titulo: "video test",
+      usuario_id: 1,
+      duracion: 60,
+      habilitado: true,
+      visibilidad: "privado",
+      habilitado: false,
+    });
+    video.save().then(() => {
+      server
+        .get(`/video/?usuario_id=1`)
+        .send({
+          contactos: [1],
+        })
+        .end((err, res) => {
+          expect(res.body["videos"].length).to.eq(0);
+          expect(res.body["total"]).to.eq(0);
+          done();
+        });
+    });
+  });
 });
