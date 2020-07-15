@@ -221,16 +221,11 @@ describe("Obtener video", () => {
       visibilidad: "privado",
     });
     video.save().then(() => {
-      server
-        .get(`/video/?usuario_id=1`)
-        .send({
-          contactos: [],
-        })
-        .end((err, res) => {
-          expect(res.body["videos"].length).to.eq(0);
-          expect(res.body["total"]).to.eq(0);
-          done();
-        });
+      server.get(`/video/?usuario_id=1&contactos[]`).end((err, res) => {
+        expect(res.body["videos"].length).to.eq(0);
+        expect(res.body["total"]).to.eq(0);
+        done();
+      });
     });
   });
 
@@ -244,16 +239,11 @@ describe("Obtener video", () => {
       visibilidad: "privado",
     });
     video.save().then(() => {
-      server
-        .get(`/video/?usuario_id=1`)
-        .send({
-          contactos: [1],
-        })
-        .end((err, res) => {
-          expect(res.body["videos"].length).to.eq(1);
-          expect(res.body["total"]).to.eq(1);
-          done();
-        });
+      server.get(`/video/?usuario_id=1&contactos[]=1`).end((err, res) => {
+        expect(res.body["videos"].length).to.eq(1);
+        expect(res.body["total"]).to.eq(1);
+        done();
+      });
     });
   });
 
@@ -268,16 +258,11 @@ describe("Obtener video", () => {
       habilitado: false,
     });
     video.save().then(() => {
-      server
-        .get(`/video/?usuario_id=1`)
-        .send({
-          contactos: [1],
-        })
-        .end((err, res) => {
-          expect(res.body["videos"].length).to.eq(0);
-          expect(res.body["total"]).to.eq(0);
-          done();
-        });
+      server.get(`/video/?usuario_id=1&contactos[]=1`).end((err, res) => {
+        expect(res.body["videos"].length).to.eq(0);
+        expect(res.body["total"]).to.eq(0);
+        done();
+      });
     });
   });
 });

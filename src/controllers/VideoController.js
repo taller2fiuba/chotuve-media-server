@@ -39,13 +39,13 @@ exports.obtener = (req, res) => {
   if (req.query.usuario_id) {
     filter_param["usuario_id"] = req.query.usuario_id;
   }
-  if (req.body.hasOwnProperty("contactos")) {
+  if (req.query.contactos) {
     filter_param["visibilidad"] = "publico";
     filter_param = {
       $or: [
         {
           usuario_id: {
-            $in: req.body.contactos,
+            $in: req.query.contactos,
           },
           habilitado: true,
         },
