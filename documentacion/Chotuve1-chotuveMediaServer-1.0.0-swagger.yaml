@@ -45,6 +45,13 @@ paths:
         format: int32
         minimum: 0
         default: 10
+       - in: query
+        name: contactos
+        description: filtro que permite ver videos privados de los ids pasados
+        type: array
+        items:
+          type: integer
+          format: int32
       responses:
         200:
           description: resultados que coinciden con el criterio

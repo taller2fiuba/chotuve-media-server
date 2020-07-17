@@ -18,7 +18,8 @@ describe("Obtener video", () => {
   it("debe responder 200 y lista vacía si no hay videos", (done) => {
     server.get("/video").end(function (err, res) {
       expect(res).to.have.status(200);
-      expect(res.body.length).to.eq(0);
+      expect(res.body["videos"].length).to.eq(0);
+      expect(res.body["total"]).to.eq(0);
       done();
     });
   });
@@ -34,7 +35,8 @@ describe("Obtener video", () => {
     video.save().then(() => {
       server.get("/video").end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.length).to.eq(1);
+        expect(res.body["videos"].length).to.eq(1);
+        expect(res.body["total"]).to.eq(1);
         done();
       });
     });
@@ -51,7 +53,8 @@ describe("Obtener video", () => {
     video.save().then(() => {
       server.get("/video?offset=0&cantidad=10").end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.length).to.eq(1);
+        expect(res.body["videos"].length).to.eq(1);
+        expect(res.body["total"]).to.eq(1);
         done();
       });
     });
@@ -68,7 +71,7 @@ describe("Obtener video", () => {
     video.save().then(() => {
       server.get("/video?offset=10&cantidad=10").end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.length).to.eq(0);
+        expect(res.body["videos"].length).to.eq(0);
         done();
       });
     });
@@ -110,7 +113,8 @@ describe("Obtener video", () => {
     video.save().then(() => {
       server.get(`/video/?solo_habilitados=false`).end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.length).to.eq(1);
+        expect(res.body["videos"].length).to.eq(1);
+        expect(res.body["total"]).to.eq(1);
         done();
       });
     });
@@ -135,8 +139,9 @@ describe("Obtener video", () => {
       video2.save().then(() => {
         server.get(`/video/?solo_habilitados=false`).end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.length).to.eq(2);
-          expect(res.body[0]["habilitado"]).to.eq(false);
+          expect(res.body["videos"].length).to.eq(2);
+          expect(res.body["total"]).to.eq(2);
+          expect(res.body["videos"][0]["habilitado"]).to.eq(false);
           done();
         });
       });
@@ -162,8 +167,9 @@ describe("Obtener video", () => {
       video2.save().then(() => {
         server.get(`/video/?solo_habilitados=true`).end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.length).to.eq(1);
-          expect(res.body[0]["habilitado"]).to.eq(true);
+          expect(res.body["videos"].length).to.eq(1);
+          expect(res.body["total"]).to.eq(1);
+          expect(res.body["videos"][0]["habilitado"]).to.eq(true);
           done();
         });
       });
@@ -181,7 +187,8 @@ describe("Obtener video", () => {
     video.save().then(() => {
       server.get(`/video/?usuario_id=1`).end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.length).to.eq(0);
+        expect(res.body["videos"].length).to.eq(0);
+        expect(res.body["total"]).to.eq(0);
         done();
       });
     });
@@ -197,8 +204,92 @@ describe("Obtener video", () => {
     });
     video.save().then(() => {
       server.get(`/video/?usuario_id=1`).end((err, res) => {
-        expect(res).to.have.status(200);
-        expect(res.body.length).to.eq(1);
+        expect(res.body["videos"].length).to.eq(1);
+        expect(res.body["total"]).to.eq(1);
+        done();
+      });
+    });
+  });
+
+  it("get video de un usuario con video privado sin ser amigo devuelve vacio", (done) => {
+    const video = new Video({
+      url: "url/test",
+      titulo: "video test",
+      usuario_id: 1,
+      duracion: 60,
+      habilitado: true,
+      visibilidad: "privado",
+    });
+    video.save().then(() => {
+      server.get(`/video/?usuario_id=1&contactos[]`).end((err, res) => {
+        expect(res.body["videos"].length).to.eq(0);
+        expect(res.body["total"]).to.eq(0);
+        done();
+      });
+    });
+  });
+
+  it("get video de un usuario con video privado siendo amigo devuelve el video", (done) => {
+    const video = new Video({
+      url: "url/test",
+      titulo: "video test",
+      usuario_id: 1,
+      duracion: 60,
+      habilitado: true,
+      visibilidad: "privado",
+    });
+    video.save().then(() => {
+      server.get(`/video/?usuario_id=1&contactos[]=1`).end((err, res) => {
+        expect(res.body["videos"].length).to.eq(1);
+        expect(res.body["total"]).to.eq(1);
+        done();
+      });
+    });
+  });
+
+  it("get video de un usuario con video privado y uno publico siendo amigo devuelve los dos video", (done) => {
+    const video_privado = new Video({
+      url: "url/test",
+      titulo: "video test",
+      usuario_id: 1,
+      duracion: 60,
+      habilitado: true,
+      visibilidad: "privado",
+    });
+
+    const video_publico = new Video({
+      url: "url/test2",
+      titulo: "video test2",
+      usuario_id: 1,
+      duracion: 60,
+      habilitado: true,
+      visibilidad: "publico",
+    });
+    video_privado.save().then(() => {
+      video_publico.save().then(() => {
+        server.get(`/video/?usuario_id=1&contactos[]=1`).end((err, res) => {
+          expect(res.body["videos"].length).to.eq(2);
+          expect(res.body["total"]).to.eq(2);
+          done();
+        });
+      });
+    });
+  });
+
+  it("get video de un usuario con video privado e inhabilitado siendo amigo devuelve vacio", (done) => {
+    const video = new Video({
+      url: "url/test",
+      titulo: "video test",
+      usuario_id: 1,
+      duracion: 60,
+      habilitado: true,
+      visibilidad: "privado",
+      habilitado: false,
+    });
+    video.save().then(() => {
+      server.get(`/video/?usuario_id=1&contactos[]=1`).end((err, res) => {
+        expect(res.body["videos"].length).to.eq(0);
+        expect(res.body["total"]).to.eq(0);
         done();
       });
     });

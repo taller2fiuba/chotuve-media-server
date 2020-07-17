@@ -36,10 +36,30 @@ exports.obtener = (req, res) => {
   ) {
     filter_param["habilitado"] = true;
   }
-  if (req.query.usuario_id) filter_param["usuario_id"] = req.query.usuario_id;
+  if (req.query.usuario_id) {
+    filter_param["usuario_id"] = req.query.usuario_id;
+  }
+  if (req.query.contactos) {
+    filter_param["visibilidad"] = "publico";
+    filter_param = {
+      $or: [
+        {
+          usuario_id: {
+            $in: req.query.contactos,
+          },
+          habilitado: true,
+        },
+        filter_param,
+      ],
+    };
+  }
   Video.paginate(filter_param, { offset: offset, limit: cantidad }).then(
     (resultado) => {
-      res.status(200).json(resultado.docs);
+      let response = {
+        videos: resultado.docs,
+        total: resultado.totalDocs,
+      };
+      res.status(200).json(response);
     }
   );
 };
