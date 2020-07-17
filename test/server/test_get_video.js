@@ -247,6 +247,35 @@ describe("Obtener video", () => {
     });
   });
 
+  it("get video de un usuario con video privado y uno publico siendo amigo devuelve los dos video", (done) => {
+    const video_privado = new Video({
+      url: "url/test",
+      titulo: "video test",
+      usuario_id: 1,
+      duracion: 60,
+      habilitado: true,
+      visibilidad: "privado",
+    });
+
+    const video_publico = new Video({
+      url: "url/test2",
+      titulo: "video test2",
+      usuario_id: 1,
+      duracion: 60,
+      habilitado: true,
+      visibilidad: "publico",
+    });
+    video_privado.save().then(() => {
+      video_publico.save().then(() => {
+        server.get(`/video/?usuario_id=1&contactos[]=1`).end((err, res) => {
+          expect(res.body["videos"].length).to.eq(2);
+          expect(res.body["total"]).to.eq(2);
+          done();
+        });
+      });
+    });
+  });
+
   it("get video de un usuario con video privado e inhabilitado siendo amigo devuelve vacio", (done) => {
     const video = new Video({
       url: "url/test",
