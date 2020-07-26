@@ -49,4 +49,31 @@ describe("EstadisticasController", () => {
         done();
       });
   });
+
+  it("debe dar correcto cuando se consulta estádisticas con fecha inicio igual a fecha fin", (done) => {
+    server
+      .get("/stats?inicio=2020-12-10&fin=2020-12-10")
+      .end(function (err, res) {
+        expect(res).to.have.status(200);
+        expect(res.body).to.eql({
+          "2020-12-10": 0,
+        });
+        done();
+      });
+  });
+
+  it("debe dar cero videos por día cuando no hay videos cuando consulto estadísticas", (done) => {
+    server
+      .get("/stats?inicio=2020-12-10&fin=2020-12-13")
+      .end(function (err, res) {
+        expect(res).to.have.status(200);
+        expect(res.body).to.eql({
+          "2020-12-10": 0,
+          "2020-12-11": 0,
+          "2020-12-12": 0,
+          "2020-12-13": 0,
+        });
+        done();
+      });
+  });
 });
