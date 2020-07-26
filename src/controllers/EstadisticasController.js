@@ -41,9 +41,11 @@ exports.estadisticas = (req, res) => {
     ],
     (err, result) => {
       if (err) {
-        res.send(err);
+        res.status(400).send(err);
       } else {
-        res.json(armarEstadisticas(result, fecha_inicio, fecha_fin));
+        res
+          .status(200)
+          .json(armarEstadisticas(result, fecha_inicio, fecha_fin));
       }
     }
   );
