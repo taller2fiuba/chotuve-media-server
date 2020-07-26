@@ -141,7 +141,7 @@ describe("Obtener video", () => {
           expect(res).to.have.status(200);
           expect(res.body["videos"].length).to.eq(2);
           expect(res.body["total"]).to.eq(2);
-          expect(res.body["videos"][0]["habilitado"]).to.eq(false);
+          expect(res.body["videos"][1]["habilitado"]).to.eq(false);
           done();
         });
       });

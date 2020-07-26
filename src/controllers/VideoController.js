@@ -53,15 +53,19 @@ exports.obtener = (req, res) => {
       ],
     };
   }
-  Video.paginate(filter_param, { offset: offset, limit: cantidad }).then(
-    (resultado) => {
-      let response = {
-        videos: resultado.docs,
-        total: resultado.totalDocs,
-      };
-      res.status(200).json(response);
-    }
-  );
+  Video.paginate(filter_param, {
+    offset: offset,
+    limit: cantidad,
+    sort: {
+      time_stamp: "desc",
+    },
+  }).then((resultado) => {
+    let response = {
+      videos: resultado.docs,
+      total: resultado.totalDocs,
+    };
+    res.status(200).json(response);
+  });
 };
 
 exports.obtener_por_id = (req, res) => {
