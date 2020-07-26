@@ -2,6 +2,7 @@ const express = require("express");
 require("./src/db/mongoose");
 const home_routers = require("./src/routers/home");
 const video_routers = require("./src/routers/video");
+const estadisticas_routers = require("./src/routers/estadisticas");
 const logger = require("./src/logger").logger;
 const loggerHttp = require("./src/logger").loggerHttp;
 const cors = require("cors");
@@ -18,6 +19,7 @@ app.use(cors());
 
 app.use("/", home_routers);
 app.use("/video", video_routers);
+app.use("/stats", estadisticas_routers);
 
 // manejador cuando una excepcion no se catchea
 function errorHandler(err, req, res, next) {
