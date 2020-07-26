@@ -76,4 +76,39 @@ describe("EstadisticasController", () => {
         done();
       });
   });
+
+  it("debe dar la cantidad de videos por día  cuando consulto estadísticas y hay videos", (done) => {
+    const video = new Video({
+      url: "url/test",
+      titulo: "video test",
+      usuario_id: 1,
+      duracion: 60,
+    });
+
+    video.save().then(() => {
+      const fecha = video.time_stamp.toISOString().split("T")[0];
+      server.get(`/stats?inicio=${fecha}&fin=${fecha}`).end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.eql({ [fecha]: 1 });
+        done();
+      });
+    });
+  });
+
+  it("debe dar la cantidad total de videos cuando consulto histórico y hay videos", (done) => {
+    const video = new Video({
+      url: "url/test",
+      titulo: "video test",
+      usuario_id: 1,
+      duracion: 60,
+    });
+
+    video.save().then(() => {
+      server.get("/stats/historico").end(function (err, res) {
+        expect(res).to.have.status(200);
+        expect(res.body["total_videos"]).to.eq(1);
+        done();
+      });
+    });
+  });
 });
