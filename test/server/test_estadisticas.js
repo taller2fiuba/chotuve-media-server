@@ -22,7 +22,7 @@ describe("EstadisticasController", () => {
     });
   });
 
-  it("debe dar error cuando se consulta estádisticas sin inicio", (done) => {
+  it("debe dar error cuando se consulta estádisticas sin fecha inicio", (done) => {
     server.get("/stats").end(function (err, res) {
       expect(res).to.have.status(400);
       expect(res.body.error).to.eq("fecha inicio es obligatorio");
@@ -30,11 +30,23 @@ describe("EstadisticasController", () => {
     });
   });
 
-  it("debe dar error cuando se consulta estádisticas sin fin", (done) => {
+  it("debe dar error cuando se consulta estádisticas sin fecha fin", (done) => {
     server.get("/stats?inicio=2020-12-01").end(function (err, res) {
       expect(res).to.have.status(400);
       expect(res.body.error).to.eq("fecha fin es obligatorio");
       done();
     });
+  });
+
+  it("debe dar error cuando se consulta estádisticas con fecha inicio mayor a fecha fin", (done) => {
+    server
+      .get("/stats?inicio=2020-12-10&fin=2020-12-01")
+      .end(function (err, res) {
+        expect(res).to.have.status(400);
+        expect(res.body.error).to.eq(
+          "fecha inicio tiene que ser menor o igual a la fecha fin"
+        );
+        done();
+      });
   });
 });
