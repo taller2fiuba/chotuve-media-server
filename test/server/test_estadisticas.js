@@ -21,4 +21,12 @@ describe("EstadisticasController", () => {
       done();
     });
   });
+
+  it("debe dar error cuando se consulta estádisticas sin inicio", (done) => {
+    server.get("/stats").end(function (err, res) {
+      expect(res).to.have.status(400);
+      expect(res.body.error).to.eq("fecha inicio es obligatorio");
+      done();
+    });
+  });
 });
