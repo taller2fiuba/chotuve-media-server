@@ -4,16 +4,16 @@ const logger = require("../logger").logger;
 
 exports.estadisticas = (req, res) => {
   if (!req.query.inicio) {
-    res.status(400).json({ error: "fecha inicio es obligatorio" });
+    return res.status(400).json({ error: "fecha inicio es obligatorio" });
   }
   if (!req.query.fin) {
-    res.status(400).json({ error: "fecha fin es obligatorio" });
+    return res.status(400).json({ error: "fecha fin es obligatorio" });
   }
 
   const fecha_inicio = new Date(req.query.inicio);
   const fecha_fin = new Date(req.query.fin);
   if (fecha_inicio > fecha_fin) {
-    res.status(400).json({
+    return res.status(400).json({
       error: "fecha inicio tiene que ser menor o igual a la fecha fin",
     });
   }
@@ -41,9 +41,9 @@ exports.estadisticas = (req, res) => {
     ],
     (err, result) => {
       if (err) {
-        res.status(400).send(err);
+        return res.status(400).send(err);
       } else {
-        res
+        return res
           .status(200)
           .json(armarEstadisticas(result, fecha_inicio, fecha_fin));
       }

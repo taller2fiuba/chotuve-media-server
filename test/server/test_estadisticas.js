@@ -29,4 +29,12 @@ describe("EstadisticasController", () => {
       done();
     });
   });
+
+  it("debe dar error cuando se consulta estádisticas sin fin", (done) => {
+    server.get("/stats?inicio=2020-12-01").end(function (err, res) {
+      expect(res).to.have.status(400);
+      expect(res.body.error).to.eq("fecha fin es obligatorio");
+      done();
+    });
+  });
 });
