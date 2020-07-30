@@ -27,6 +27,12 @@ paths:
       - application/json
       parameters:
       - in: query
+        name: ids
+        type: array
+        items:
+          type: integer
+          format: int64
+      - in: query
         name: solo_habilitados
         description: filtro sobre el campo habilitado
         type: boolean
@@ -45,7 +51,7 @@ paths:
         format: int32
         minimum: 0
         default: 10
-       - in: query
+      - in: query
         name: contactos
         description: filtro que permite ver videos privados de los ids pasados
         type: array
@@ -124,6 +130,50 @@ paths:
             $ref: '#/definitions/VideoResponse'
         404:
           description: El video no existe
+  /stats:
+    get:
+      summary: Obtener estadísticas
+      operationId: obtenerEstadísticas
+      description: Devuelve la cantidad de videos por día dado un rango de fechas
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: inicio
+        type: string
+        format: date
+        description: fecha inicio para tomar las estadísticas
+        required: true
+      - in: query
+        name: fin
+        type: string
+        format: date
+        description: fecha fin para tomar las estadísticas inclusive
+        required: true
+      responses:
+        200:
+          description: objeto con la cantidad de videos agrupado por día para todos los días dentro del rango
+          schema:
+            type: object
+            example: "{2020-10-20 : 5}"
+  /stats/historico:
+    get:
+      summary: Obtener estadísticas históricas
+      operationId: obtenerHistórico
+      description: Devuelve el total de videos en el servidor
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              total_videos:
+                type: integer
+                format: int64
+                example: 254
+
 
 definitions:
   VideoResponse:
@@ -222,6 +272,7 @@ definitions:
         enum: [publico, privado]
         default: publico
         example: privado
+        
   Errores:
     type: object
     properties:
