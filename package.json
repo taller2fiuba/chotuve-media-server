@@ -43,7 +43,7 @@
     "pino": "^6.2.1",
     "pino-http": "^5.1.0",
     "pino-pretty": "^4.0.0",
-    "underscore": "^1.10.2"
+    "underscore": "^1.12.1"
   },
   "devDependencies": {
     "chai": "^4.2.0",
